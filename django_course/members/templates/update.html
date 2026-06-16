@@ -1,0 +1,67 @@
+{% extends "master.html" %}
+
+{% block title %}Edit {{ mymember.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h2>Edit Member</h2>
+
+    <!--
+      enctype="multipart/form-data" is required whenever a form
+      uploads files (like a profile image). Without it, the file
+      data is stripped and request.FILES will be empty in the view.
+    -->
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="{{ mymember.name }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" value="{{ mymember.age|default:'' }}" min="1" max="120">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="{{ mymember.email }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_number">Contact Number</label>
+        <input type="text" id="contact_number" name="contact_number" value="{{ mymember.contact_number }}">
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" name="address">{{ mymember.address }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="social_media_url">Social Media URL</label>
+        <input type="url" id="social_media_url" name="social_media_url" value="{{ mymember.social_media_url }}">
+      </div>
+
+      <div class="form-group">
+        <label for="profile_image">Profile Image</label>
+        {% if mymember.profile_image %}
+          <p class="current-image-hint">Current: {{ mymember.profile_image.name }}</p>
+        {% endif %}
+        <!--
+          accept="image/*" hints to the browser to show only image files.
+          The actual file is saved to MEDIA_ROOT/profile_images/ on the server.
+        -->
+        <input type="file" id="profile_image" name="profile_image" accept="image/*">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'member_detail_view' mymember.id %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

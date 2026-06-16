@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Members Club{% endblock %}</title>
+
+  <!--
+    STATIC FILES in Django
+    ──────────────────────
+    Step 1: {% load static %} at the very top of any template that needs static files.
+    Step 2: Use {% static 'path/to/file' %} to generate the correct URL.
+
+    Django resolves static files from two places:
+      a) Each app's  <app>/static/  folder  (found when APP_DIRS = True)
+      b) Any folder listed in STATICFILES_DIRS in settings.py
+
+    In development, runserver serves them automatically.
+    In production, run `python manage.py collectstatic` first.
+  -->
+  <link rel="stylesheet" href="{% static 'members/css/style.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+  <h1>Members Club</h1>
+  <a href="{% url 'members' %}">All Members</a>
+</nav>
+
+{% block content %}{% endblock %}
+
+<!--
+  JavaScript is loaded at the bottom of <body> so the HTML is
+  fully parsed before the script runs.
+-->
+<script src="{% static 'members/js/main.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% extends "master.html" %}
+
+{% block title %}{{ mymember.name }} - Member Details{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="detail-card">
+
+    <!-- Header: avatar + name + joined date -->
+    <div class="detail-header">
+      {% if mymember.profile_image %}
+        <!--
+          MEDIA FILES in Django
+          ──────────────────────
+          profile_image is an ImageField.  .url returns the full URL
+          based on MEDIA_URL in settings.py  (e.g. /media/profile_images/photo.jpg).
+          The actual file lives in MEDIA_ROOT on disk.
+        -->
+        <img src="{{ mymember.profile_image.url }}" alt="{{ mymember.name }}" class="detail-avatar">
+      {% else %}
+        <div class="detail-avatar-placeholder" data-name="{{ mymember.name }}">
+          {{ mymember.name|first|upper }}
+        </div>
+      {% endif %}
+
+      <div class="detail-header-info">
+        <h2>{{ mymember.name }}</h2>
+        <!-- Django date filter formats the datetime object -->
+        <p>Member since {{ mymember.created_at|date:"F j, Y" }}</p>
+      </div>
+    </div>
+
+    <!-- Field grid -->
+    <div class="detail-fields">
+
+      <div class="field-group">
+        <span class="field-label">Age</span>
+        <span class="field-value {% if not mymember.age %}empty{% endif %}">
+          {% if mymember.age %}{{ mymember.age }} years{% else %}Not provided{% endif %}
+        </span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Email</span>
+        <span class="field-value">
+          <a href="mailto:{{ mymember.email }}">{{ mymember.email }}</a>
+        </span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Contact Number</span>
+        <span class="field-value {% if not mymember.contact_number %}empty{% endif %}">
+          {% if mymember.contact_number %}
+            <a href="tel:{{ mymember.contact_number }}">{{ mymember.contact_number }}</a>
+          {% else %}
+            Not provided
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Social Media</span>
+        <span class="field-value {% if not mymember.social_media_url %}empty{% endif %}">
+          {% if mymember.social_media_url %}
+            <a href="{{ mymember.social_media_url }}" target="_blank" rel="noopener noreferrer">
+              {{ mymember.social_media_url }}
+            </a>
+          {% else %}
+            Not provided
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="field-group full-width">
+        <span class="field-label">Address</span>
+        <span class="field-value {% if not mymember.address %}empty{% endif %}">
+          {% if mymember.address %}{{ mymember.address }}{% else %}Not provided{% endif %}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Action buttons -->
+    <div class="detail-actions">
+      <a href="{% url 'member_update' mymember.id %}" class="btn btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit
+      </a>
+
+      <form method="post" action="{% url 'member_delete' mymember.id %}"
+            onsubmit="return confirmDelete('{{ mymember.name }}')">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+          </svg>
+          Delete
+        </button>
+      </form>
+
+      <a href="{% url 'members' %}" class="btn btn-secondary">&#8592; Back to Members</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
