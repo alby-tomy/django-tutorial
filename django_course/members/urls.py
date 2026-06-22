@@ -4,6 +4,9 @@ from . import views
 
 urlpatterns = [
     # ── HTML template views ────────────────────────────────────────────────────
+    path('login/', views.my_login_view, name='login'),
+    path('logout/', views.my_logout_view, name='logout'),
+    path('dashboard/', views.app_welcome, name='dashboard'),
     path('members/', views.members, name='members'),
     path('members/<int:pk>/', views.member_detail_view, name='member_detail_view'),
     path('members/<int:pk>/delete/', views.member_delete_view, name='member_delete'),

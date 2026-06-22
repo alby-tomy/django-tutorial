@@ -5,9 +5,26 @@ from rest_framework.response import Response
 
 from .models import Member
 from .serializers import MemberSerializer
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
 # ── DRF API Views (return JSON) ────────────────────────────────────────────────
+
+
+def my_login_view(request):
+    if request.method != 'POST':
+        return render(request, 'login.html')
+
+    user = authenticate(request,
+        username=request.POST['username'],
+        password=request.POST['password'])
+    
+    if user is not None:
+        login(request, user)   # sets session cookie
+        return redirect('dashboard')
+    return render(request, 'login.html', {'error': 'Invalid creds'})
+
 
 @api_view(['GET', 'POST'])
 def member_list(request):
@@ -52,8 +69,14 @@ def member_detail(request, pk):
 
 # ── HTML Template Views (return rendered HTML pages) ──────────────────────────
 
+@login_required
 def app_welcome(request):
     return render(request, 'welcome.html')
+
+
+def my_logout_view(request):
+    logout(request)
+    return redirect('login')
 
 
 def members(request):
