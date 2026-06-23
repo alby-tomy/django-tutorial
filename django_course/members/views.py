@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from .forms import MemberForm
 from .models import Member
 from .serializers import MemberSerializer
 from django.contrib.auth import authenticate, login, logout
@@ -98,7 +99,8 @@ def member_delete_view(request, pk):
     if request.method == 'POST':
         member = Member.objects.filter(pk=pk).first()
         if member:
-            member.delete()
+            member.is_active = False
+            member.save()
     return redirect('members')
 
 
@@ -109,16 +111,11 @@ def member_update_view(request, pk):
         return redirect('members')
 
     if request.method == 'POST':
-        member.name = request.POST.get('name', member.name)
-        age = request.POST.get('age', '').strip()
-        member.age = int(age) if age else None
-        member.email = request.POST.get('email', member.email)
-        member.contact_number = request.POST.get('contact_number', '')
-        member.address = request.POST.get('address', '')
-        member.social_media_url = request.POST.get('social_media_url', '')
-        if 'profile_image' in request.FILES:
-            member.profile_image = request.FILES['profile_image']
-        member.save()
-        return redirect('member_detail_view', pk=member.pk)
+        form = MemberForm(request.POST, request.FILES, instance=member)
+        if form.is_valid():
+            form.save()
+            return redirect('member_detail_view', pk=member.pk)
+    else:
+        form = MemberForm(instance=member)
 
-    return render(request, 'update.html', {'mymember': member})
+    return render(request, 'update.html', {'mymember': member, 'form': form})

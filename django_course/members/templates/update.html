@@ -16,45 +16,48 @@
       {% csrf_token %}
 
       <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" value="{{ mymember.name }}" required>
+        <label for="{{ form.name.id_for_label }}">Full Name</label>
+        {{ form.name }}
+        {% for error in form.name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="age">Age</label>
-        <input type="number" id="age" name="age" value="{{ mymember.age|default:'' }}" min="1" max="120">
+        <label for="{{ form.age.id_for_label }}">Age</label>
+        {{ form.age }}
+        {% for error in form.age.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="{{ mymember.email }}" required>
+        <label for="{{ form.email.id_for_label }}">Email Address</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="contact_number">Contact Number</label>
-        <input type="text" id="contact_number" name="contact_number" value="{{ mymember.contact_number }}">
+        <label for="{{ form.contact_number.id_for_label }}">Contact Number</label>
+        {{ form.contact_number }}
+        {% for error in form.contact_number.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="address">Address</label>
-        <textarea id="address" name="address">{{ mymember.address }}</textarea>
+        <label for="{{ form.address.id_for_label }}">Address</label>
+        {{ form.address }}
+        {% for error in form.address.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="social_media_url">Social Media URL</label>
-        <input type="url" id="social_media_url" name="social_media_url" value="{{ mymember.social_media_url }}">
+        <label for="{{ form.social_media_url.id_for_label }}">Social Media URL</label>
+        {{ form.social_media_url }}
+        {% for error in form.social_media_url.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-group">
-        <label for="profile_image">Profile Image</label>
+        <label for="{{ form.profile_image.id_for_label }}">Profile Image</label>
         {% if mymember.profile_image %}
           <p class="current-image-hint">Current: {{ mymember.profile_image.name }}</p>
         {% endif %}
-        <!--
-          accept="image/*" hints to the browser to show only image files.
-          The actual file is saved to MEDIA_ROOT/profile_images/ on the server.
-        -->
-        <input type="file" id="profile_image" name="profile_image" accept="image/*">
+        {{ form.profile_image }}
+        {% for error in form.profile_image.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
       </div>
 
       <div class="form-actions">
